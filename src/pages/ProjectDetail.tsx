@@ -49,14 +49,14 @@ const ProjectDetail = () => {
         const userData = await getCurrentUser();
         setUser(userData);
         
-        const projectData = await getProject(id);
+        const projectResponse = await getProject(id);
         
-        if (projectData && !projectData.error) {
-          setProject(projectData);
+        if (projectResponse && projectResponse.data && !projectResponse.error) {
+          setProject(projectResponse.data);
           
           // Check if user has rated this project before
-          if (userData && projectData.ratings) {
-            const userRatingObj = projectData.ratings.find(
+          if (userData && projectResponse.data.ratings) {
+            const userRatingObj = projectResponse.data.ratings.find(
               (r: any) => r.user_id === userData.id
             );
             if (userRatingObj) {
