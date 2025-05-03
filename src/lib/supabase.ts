@@ -1,5 +1,4 @@
-
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { type User, type Project, type Rating } from '@/types';
 
 // Update with real Supabase credentials
@@ -8,7 +7,7 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-supabase-
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-supabase-anon-key';
 
 // Create Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function signIn(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({
