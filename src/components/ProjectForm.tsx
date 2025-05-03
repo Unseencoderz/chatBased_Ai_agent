@@ -109,7 +109,7 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
       const projectData = {
         ...values,
         user_id: userId,
-        tech_stack: selectedTech as TechStack[], // Ensure correct typing
+        tech_stack: selectedTech as TechStack[],
         start_date: values.start_date ? values.start_date.toISOString() : undefined,
         end_date: values.end_date ? values.end_date.toISOString() : undefined,
       };
@@ -126,7 +126,8 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
       });
       
       if (onSuccess && data && Array.isArray(data) && data[0]) {
-        onSuccess(data[0] as Project);
+        // Type assertion to handle the project correctly
+        onSuccess(data[0] as unknown as Project);
       }
       
       form.reset();

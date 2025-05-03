@@ -66,5 +66,20 @@ export async function getCurrentUser() {
     .eq('id', sessionData.session.user.id)
     .single();
   
-  return data as User | null;
+  if (data) {
+    // Cast the data to match our User type
+    const userData = {
+      id: data.id,
+      email: data.email || '',
+      username: data.username || data.name || '',
+      name: data.name || '',
+      avatar_url: data.avatar_url,
+      bio: data.bio,
+      created_at: data.created_at
+    } as User;
+    
+    return userData;
+  }
+  
+  return null;
 }

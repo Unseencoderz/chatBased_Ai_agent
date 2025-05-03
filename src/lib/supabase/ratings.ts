@@ -3,12 +3,16 @@ import { supabase } from '@/integrations/supabase/client';
 
 export async function rateProject(projectId: string, userId: string, rating: number) {
   // Check if user has already rated
-  const { data: existingRating } = await supabase
+  const { data: existingRating, error: checkError } = await supabase
     .from('ratings')
     .select('*')
     .eq('project_id', projectId)
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
+  
+  if (checkError) {
+    return { data: null, error: checkError };
+  }
   
   if (existingRating) {
     // Update existing rating

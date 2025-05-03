@@ -9,7 +9,7 @@ export async function getProjects(filters?: {
 }) {
   let query = supabase
     .from('projects')
-    .select('*, profiles:user_id(*)');
+    .select('*, profiles(*)');
   
   if (filters?.status) {
     query = query.eq('status', filters.status);
@@ -25,11 +25,15 @@ export async function getProjects(filters?: {
   
   const { data, error } = await query.order('upload_date', { ascending: false });
   
-  if (data) {
-    return data.map(project => ({
-      ...project,
-      user: project.profiles
-    }));
+  if (data && Array.isArray(data)) {
+    return data.map(project => {
+      // Ensure the data structure matches our Project type
+      return {
+        ...project,
+        user: project.profiles,
+        tech_stack: project.tech_stack || []
+      } as unknown as Project;
+    });
   }
   
   return { data, error };
@@ -38,21 +42,26 @@ export async function getProjects(filters?: {
 export async function getProject(id: string) {
   const { data, error } = await supabase
     .from('projects')
-    .select('*, profiles:user_id(*), ratings(*)')
+    .select('*, profiles(*), ratings(*)')
     .eq('id', id)
     .single();
   
   if (data) {
     // Calculate average rating
-    const ratings = data.ratings || [];
-    const avgRating = ratings.length 
-      ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length
-      : 0;
+    let avgRating = 0;
+    if (data.ratings && Array.isArray(data.ratings) && data.ratings.length > 0) {
+      avgRating = data.ratings.reduce((sum, r) => sum + r.rating, 0) / data.ratings.length;
+    }
     
+    // Ensure the data structure matches our Project type
     return {
-      ...data,
-      user: data.profiles,
-      avg_rating: avgRating
+      data: {
+        ...data,
+        user: data.profiles,
+        avg_rating: avgRating,
+        tech_stack: data.tech_stack || []
+      } as unknown as Project,
+      error
     };
   }
   
@@ -65,7 +74,7 @@ export async function createProject(projectData: Partial<Project>) {
     .insert({
       ...projectData,
       upload_date: new Date().toISOString(),
-    })
+    } as any)
     .select();
   
   return { data, error };
@@ -78,5 +87,5 @@ export async function getUserProjects(userId: string) {
     .eq('user_id', userId)
     .order('upload_date', { ascending: false });
   
-  return { data, error };
+  return { data: data as unknown as Project[], error };
 }
