@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -108,7 +109,7 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
       const projectData = {
         ...values,
         user_id: userId,
-        tech_stack: selectedTech, // Already properly typed as TechStack[]
+        tech_stack: selectedTech as TechStack[], // Ensure correct typing
         start_date: values.start_date ? values.start_date.toISOString() : undefined,
         end_date: values.end_date ? values.end_date.toISOString() : undefined,
       };
@@ -124,7 +125,7 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
         description: "Your project is now visible in the showcase.",
       });
       
-      if (onSuccess && data) {
+      if (onSuccess && data && Array.isArray(data) && data[0]) {
         onSuccess(data[0] as Project);
       }
       
