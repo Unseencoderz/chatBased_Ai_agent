@@ -55,6 +55,7 @@ export interface Project {
   user_id: string;
   user: User;
   avg_rating?: number;
+  ratings?: Rating[]; // Add this line to fix the TypeScript error
 }
 
 export interface Rating {
