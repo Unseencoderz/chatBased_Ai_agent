@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -105,11 +104,11 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
     try {
       setIsSubmitting(true);
       
-      // Convert Date objects to ISO strings
+      // Convert Date objects to ISO strings and ensure tech_stack is properly typed
       const projectData = {
         ...values,
         user_id: userId,
-        tech_stack: selectedTech as string[],
+        tech_stack: selectedTech, // Already properly typed as TechStack[]
         start_date: values.start_date ? values.start_date.toISOString() : undefined,
         end_date: values.end_date ? values.end_date.toISOString() : undefined,
       };
@@ -147,13 +146,13 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
       setSelectedTech(selectedTech.filter((t) => t !== tech));
       form.setValue(
         "tech_stack",
-        selectedTech.filter((t) => t !== tech) as string[]
+        selectedTech.filter((t) => t !== tech)
       );
     } else {
       setSelectedTech([...selectedTech, tech]);
       form.setValue(
         "tech_stack",
-        [...selectedTech, tech] as string[]
+        [...selectedTech, tech]
       );
     }
   };
