@@ -25,6 +25,11 @@ export async function getProjects(filters?: {
   
   const { data, error } = await query.order('upload_date', { ascending: false });
   
+  if (error) {
+    console.error("Error fetching projects:", error);
+    return [];
+  }
+  
   if (data && Array.isArray(data)) {
     return data.map(project => {
       // Ensure the data structure matches our Project type
@@ -36,7 +41,7 @@ export async function getProjects(filters?: {
     });
   }
   
-  return { data, error };
+  return [];
 }
 
 export async function getProject(id: string) {
