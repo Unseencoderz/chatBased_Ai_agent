@@ -1,6 +1,5 @@
-
 import { createClient } from '@supabase/supabase-js';
-import { type User } from '@/types';
+import { type User, type Project, type Rating } from '@/types';
 
 // These are placeholder values - in production you'd use environment variables
 const supabaseUrl = 'https://your-supabase-url.supabase.co';
