@@ -207,11 +207,3 @@ export async function rateProject(projectId: string, userId: string, rating: num
     return { data, error };
   }
 }
-
-export interface Rating {
-  id: string;
-  project_id: string;
-  user_id: string;
-  rating: number;
-  created_at: string;
-}

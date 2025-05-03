@@ -105,10 +105,13 @@ const ProjectForm = ({ userId, onSuccess }: ProjectFormProps) => {
     try {
       setIsSubmitting(true);
       
+      // Convert Date objects to ISO strings
       const projectData = {
         ...values,
         user_id: userId,
         tech_stack: selectedTech as string[],
+        start_date: values.start_date ? values.start_date.toISOString() : undefined,
+        end_date: values.end_date ? values.end_date.toISOString() : undefined,
       };
       
       const { data, error } = await createProject(projectData);
