@@ -1,10 +1,13 @@
+
 import { createClient } from '@supabase/supabase-js';
 import { type User, type Project, type Rating } from '@/types';
 
-// These are placeholder values - in production you'd use environment variables
-const supabaseUrl = 'https://your-supabase-url.supabase.co';
-const supabaseAnonKey = 'your-supabase-anon-key';
+// Update with real Supabase credentials
+// In a production app, these should be environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-supabase-url.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-supabase-anon-key';
 
+// Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function signIn(email: string, password: string) {
