@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useState, useEffect } from "react";
 import { User } from "@/types";
 import { getCurrentUser, signOut } from "@/lib/supabase";
-import { Github, LogOut, Plus, User as UserIcon, Settings, Image, FileEdit } from "lucide-react";
+import { Github, LogOut, Plus, User as UserIcon, Settings, Image, FileEdit, Upload, Compass, GalleryHorizontal } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -45,6 +45,8 @@ const Navbar = () => {
         title: "Signed out successfully",
         duration: 3000,
       });
+      // Force reload to ensure all auth state is cleared
+      window.location.href = '/';
     } else {
       toast({
         title: "Sign out failed",
@@ -65,11 +67,17 @@ const Navbar = () => {
           </Link>
           
           <div className="hidden md:flex gap-6">
-            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Explore
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              <Compass className="h-4 w-4" />
+              <span>Explore</span>
             </Link>
-            <Link to="/tech-gallery" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              Tech Gallery
+            <Link to="/projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              <GalleryHorizontal className="h-4 w-4" />
+              <span>Projects</span>
+            </Link>
+            <Link to="/tech-gallery" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              <Settings className="h-4 w-4" />
+              <span>Tech Gallery</span>
             </Link>
           </div>
         </div>
@@ -78,9 +86,9 @@ const Navbar = () => {
           {!loading && (
             user ? (
               <>
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/upload" className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
+                <Button asChild variant="ghost" size="sm" className="flex items-center gap-1">
+                  <Link to="/upload">
+                    <Upload className="h-4 w-4 mr-1" />
                     <span>Upload</span>
                   </Link>
                 </Button>

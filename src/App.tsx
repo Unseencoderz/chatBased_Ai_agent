@@ -13,6 +13,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Profile from "./pages/Profile";
 import ProfileEdit from "./pages/ProfileEdit";
 import TechGallery from "./pages/TechGallery";
+import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/profile/edit/:username" element={<ProfileEdit />} />
           <Route path="/tech-gallery" element={<TechGallery />} />
+          <Route path="/projects" element={<Projects />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </TooltipProvider>
