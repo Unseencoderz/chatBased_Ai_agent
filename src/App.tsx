@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Upload from "./pages/Upload";
 import ProjectDetail from "./pages/ProjectDetail";
 import Profile from "./pages/Profile";
+import ProfileEdit from "./pages/ProfileEdit";
 import TechGallery from "./pages/TechGallery";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/upload" element={<Upload />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
           <Route path="/profile/:username" element={<Profile />} />
+          <Route path="/profile/edit/:username" element={<ProfileEdit />} />
           <Route path="/tech-gallery" element={<TechGallery />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, FileEdit } from "lucide-react";
 import { getCurrentUser, getUserProfile, getUserProjects } from "@/lib/supabase";
 import { Project, User } from "@/types";
 import ProfileCard from "@/components/ProfileCard";
@@ -111,12 +111,27 @@ const Profile = () => {
       <main className="container py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
-            <ProfileCard
-              user={profile}
-              projectCount={projects.length}
-              avgRating={avgRating}
-              isCurrentUser={isCurrentUserProfile}
-            />
+            <div className="flex flex-col">
+              <ProfileCard
+                user={profile}
+                projectCount={projects.length}
+                avgRating={avgRating}
+                isCurrentUser={isCurrentUserProfile}
+              />
+              
+              {isCurrentUserProfile && (
+                <Button
+                  variant="outline"
+                  className="mt-4 w-full"
+                  asChild
+                >
+                  <Link to={`/profile/edit/${profile.username}`} className="flex items-center gap-2">
+                    <FileEdit className="h-4 w-4" />
+                    <span>Edit Profile</span>
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
           
           <div className="md:col-span-3">
