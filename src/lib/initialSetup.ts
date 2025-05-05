@@ -9,7 +9,7 @@ export async function initializeApp() {
     
     // Check if handle_new_user function exists by executing our function_exists RPC
     // We need to provide both return type and input parameter types
-    const { data: functionExists, error: functionError } = await supabase.rpc<boolean, { function_name: string }>(
+    const { data: functionExists, error: functionError } = await supabase.rpc(
       'function_exists',
       { function_name: 'handle_new_user' }
     ).maybeSingle();
