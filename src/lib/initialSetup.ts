@@ -7,11 +7,12 @@ export async function initializeApp() {
     const { data: buckets } = await supabase.storage.listBuckets();
     const avatarsBucketExists = buckets?.some(bucket => bucket.name === 'avatars');
     
-    // Check if handle_new_user function exists by executing a simple function call
-    // that returns a boolean indicating if the function exists
-    const { data: functionExists, error: functionError } = await supabase.rpc('function_exists', {
-      function_name: 'handle_new_user'
-    }).maybeSingle();
+    // Check if handle_new_user function exists by executing our function_exists RPC
+    // We need to use the any type here since TypeScript doesn't know about our custom function
+    const { data: functionExists, error: functionError } = await supabase.rpc<boolean>(
+      'function_exists',
+      { function_name: 'handle_new_user' }
+    ).maybeSingle();
     
     if (functionError) {
       console.error('Error checking for handle_new_user function:', functionError);
