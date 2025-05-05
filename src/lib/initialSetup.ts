@@ -11,7 +11,7 @@ export async function initializeApp() {
     // We need to provide both return type and input parameter types
     const { data: functionExists, error: functionError } = await supabase.rpc(
       'function_exists',
-      { function_name: 'handle_new_user' }
+      { function_name: 'handle_new_user' } as any
     ).maybeSingle();
     
     if (functionError) {
