@@ -16,6 +16,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signIn, signUp, getSession } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
+import ProfileSetup from "@/components/ProfileSetup";
+import { User } from "@/types";
 
 const Login = () => {
   const [searchParams] = useSearchParams();
@@ -26,6 +28,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
+  const [newUser, setNewUser] = useState<User | null>(null);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -75,7 +79,7 @@ const Login = () => {
         throw new Error("Username is required");
       }
       
-      const { error } = await signUp(email, password, username);
+      const { data, error } = await signUp(email, password, username);
       
       if (error) {
         throw new Error(error.message);
@@ -83,10 +87,24 @@ const Login = () => {
       
       toast({
         title: "Account created successfully",
-        description: "Welcome to DevStream! You can now log in.",
+        description: "Welcome to DevStream! Let's set up your profile.",
       });
       
-      setActiveTab("login");
+      // Check if user data was returned
+      if (data && data.user) {
+        setNewUser({
+          id: data.user.id,
+          email: email,
+          username: username,
+          name: username,
+          bio: '',
+          created_at: new Date().toISOString(),
+        } as User);
+        setShowProfileSetup(true);
+      } else {
+        // If no user data, go to login
+        setActiveTab("login");
+      }
     } catch (error: any) {
       toast({
         title: "Sign up failed",
@@ -97,6 +115,27 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  const handleProfileSetupComplete = () => {
+    // Navigate to home page after profile setup
+    window.location.href = '/';
+  };
+
+  if (showProfileSetup && newUser) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <Navbar />
+        <main className="container py-8 flex items-center justify-center">
+          <div className="w-full max-w-lg">
+            <ProfileSetup 
+              user={newUser} 
+              onComplete={handleProfileSetupComplete} 
+            />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">

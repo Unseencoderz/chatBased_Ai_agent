@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Project } from "@/types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Star } from "lucide-react";
 import TechBadge from "./TechBadge";
 import { format } from "date-fns";
@@ -25,6 +26,9 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, isAuthenticated = false }: ProjectCardProps) => {
+  // Determine if we should show website preview or image
+  const shouldShowWebsitePreview = project.project_url && !project.image_url;
+  
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-white/20 bg-black/20 backdrop-blur-sm border-white/10">
       <div className="relative h-48 overflow-hidden">
@@ -34,6 +38,16 @@ const ProjectCard = ({ project, isAuthenticated = false }: ProjectCardProps) => 
             alt={project.title}
             className="w-full h-full object-cover transition-transform hover:scale-105"
           />
+        ) : project.project_url ? (
+          <AspectRatio ratio={16/9} className="w-full h-full bg-muted">
+            <iframe 
+              src={project.project_url}
+              title={project.title}
+              className="w-full h-full object-cover border-0"
+              loading="lazy"
+              sandbox="allow-scripts allow-same-origin"
+            />
+          </AspectRatio>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-muted">
             <span className="text-muted-foreground">No Image</span>

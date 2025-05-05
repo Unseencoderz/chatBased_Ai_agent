@@ -31,7 +31,7 @@ export async function signUp(email: string, password: string, username: string) 
         id: authData.user.id,
         username,
         email,
-        name: username,
+        name: username, // Use username as default name if none provided
       });
 
     if (profileError) {
