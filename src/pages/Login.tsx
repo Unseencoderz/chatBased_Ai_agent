@@ -85,25 +85,58 @@ const Login = () => {
         throw new Error(error.message);
       }
       
-      toast({
-        title: "Account created successfully",
-        description: "Welcome to DevStream! Let's set up your profile.",
-      });
+      // Check if we're in email confirmation mode
+      if (data?.user && data.user.identities?.length === 0) {
+        toast({
+          title: "Verification email sent",
+          description: "Please check your email to confirm your account before logging in.",
+        });
+        setActiveTab("login");
+        setLoading(false);
+        return;
+      }
       
-      // Check if user data was returned
       if (data && data.user) {
-        setNewUser({
-          id: data.user.id,
-          email: email,
-          username: username,
-          name: username,
-          bio: '',
-          created_at: new Date().toISOString(),
-        } as User);
-        setShowProfileSetup(true);
+        // Get the user data after signup
+        // We'll wait a brief moment to ensure the trigger has run
+        setTimeout(async () => {
+          try {
+            // Attempt to sign in to get the session
+            await signIn(email, password);
+            
+            // Now show profile setup
+            setNewUser({
+              id: data.user.id,
+              email: email,
+              username: username,
+              name: username,
+              bio: '',
+              created_at: new Date().toISOString(),
+            } as User);
+            
+            setShowProfileSetup(true);
+            
+            toast({
+              title: "Account created successfully",
+              description: "Welcome to DevStream! Let's set up your profile.",
+            });
+          } catch (error: any) {
+            console.error("Error during post-signup flow:", error);
+            // Fall back to redirect
+            window.location.href = '/';
+          } finally {
+            setLoading(false);
+          }
+        }, 500); // Give a small delay to ensure trigger runs
       } else {
         // If no user data, go to login
         setActiveTab("login");
+        setLoading(false);
+        
+        toast({
+          title: "Sign up successful",
+          description: "Please log in with your new credentials.",
+        });
       }
     } catch (error: any) {
       toast({
@@ -111,7 +144,6 @@ const Login = () => {
         description: error.message,
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };

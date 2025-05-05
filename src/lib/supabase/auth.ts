@@ -21,26 +21,10 @@ export async function signUp(email: string, password: string, username: string) 
     },
   });
 
-  if (authError) return { data: null, error: authError };
-
-  // Create a profile record in the profiles table
-  if (authData.user) {
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: authData.user.id,
-        username,
-        email,
-        name: username, // Use username as default name if none provided
-      });
-
-    if (profileError) {
-      console.error('Error creating profile:', profileError);
-      return { data: null, error: profileError };
-    }
-  }
-
-  return { data: authData, error: null };
+  // We no longer need to manually create a profile record
+  // The database trigger will handle this automatically
+  
+  return { data: authData, error: authError };
 }
 
 export async function signOut() {
