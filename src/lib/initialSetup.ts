@@ -8,11 +8,11 @@ export async function initializeApp() {
     const avatarsBucketExists = buckets?.some(bucket => bucket.name === 'avatars');
     
     // Check if handle_new_user function exists by executing our function_exists RPC
-    // We need to provide both return type and input parameter types
+    // We'll use the generic approach without explicit type parameters to avoid type errors
     const { data: functionExists, error: functionError } = await supabase.rpc(
       'function_exists',
-      { function_name: 'handle_new_user' } as any
-    ).maybeSingle();
+      { function_name: 'handle_new_user' } 
+    );
     
     if (functionError) {
       console.error('Error checking for handle_new_user function:', functionError);
