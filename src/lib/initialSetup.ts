@@ -7,23 +7,28 @@ export async function initializeApp() {
     const { data: buckets } = await supabase.storage.listBuckets();
     const avatarsBucketExists = buckets?.some(bucket => bucket.name === 'avatars');
     
-    // Check if handle_new_user function exists
-    const { data: functions, error: functionError } = await supabase
-      .from('pg_catalog.pg_proc')
-      .select('proname')
-      .eq('proname', 'handle_new_user')
-      .maybeSingle();
+    // Check if handle_new_user function exists by executing a simple function call
+    // that returns a boolean indicating if the function exists
+    const { data: functionExists, error: functionError } = await supabase.rpc('function_exists', {
+      function_name: 'handle_new_user'
+    }).maybeSingle();
     
     if (functionError) {
       console.error('Error checking for handle_new_user function:', functionError);
+      // If we can't check if the function exists, assume it doesn't for safety
+      console.log('Initialization issue:', 
+        !avatarsBucketExists ? 'Avatars bucket not found.' : '',
+        'Could not verify if handle_new_user function exists.'
+      );
+      return;
     }
     
-    if (avatarsBucketExists && functions) {
+    if (avatarsBucketExists && functionExists) {
       console.log('App initialized successfully');
     } else {
       console.log('Initialization issue:', 
         !avatarsBucketExists ? 'Avatars bucket not found.' : '',
-        !functions ? 'handle_new_user function not found.' : ''
+        !functionExists ? 'handle_new_user function not found.' : ''
       );
     }
   } catch (error) {
