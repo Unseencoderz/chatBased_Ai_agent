@@ -8,10 +8,10 @@ export async function initializeApp() {
     const avatarsBucketExists = buckets?.some(bucket => bucket.name === 'avatars');
     
     // Check if handle_new_user function exists by executing our function_exists RPC
-    // Using a type assertion to avoid TypeScript errors with the RPC call
+    // Using a type assertion to let TypeScript know the shape of our parameters
     const { data: functionExists, error: functionError } = await supabase.rpc(
       'function_exists',
-      { function_name: 'handle_new_user' } as { function_name: string }
+      { function_name: 'handle_new_user' } as any
     );
     
     if (functionError) {
